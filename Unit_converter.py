@@ -97,3 +97,9 @@ with st.expander("📜 View Recent Conversion Logs"):
                 st.text(entry.strip())
     except FileNotFoundError:
         st.info("No logs available yet.")
+# Footer
+st.markdown("---")
+st.markdown(
+    "<div style='text-align:center; color:black;'>© 2025 Zach Techs | Made with ❤️ in Streamlit</div>",
+    unsafe_allow_html=True
+)

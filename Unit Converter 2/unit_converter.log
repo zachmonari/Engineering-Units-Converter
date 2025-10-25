@@ -1,0 +1,40 @@
+2025-10-25 10:04:53,521 - WARNING - Failed login attempt for admin
+2025-10-25 10:05:24,520 - INFO - New user registered: admin
+2025-10-25 10:05:57,894 - INFO - admin logged in.
+2025-10-25 10:06:59,911 - INFO - Power: 1300.0 w → 1.300000 kw by admin
+2025-10-25 10:07:12,777 - INFO - Power: 1300.0 w → 0.001300 mw by admin
+2025-10-25 10:07:19,882 - INFO - Power: 1300.0 w → 1.743328 hp by admin
+2025-10-25 10:08:04,451 - INFO - Temperature: 1300.0 c → 2372.000000 f by admin
+2025-10-25 10:08:09,025 - INFO - User logged out.
+2025-10-25 10:08:33,211 - INFO - admin logged in.
+2025-10-25 10:08:41,539 - INFO - User logged out.
+2025-10-25 10:08:51,435 - WARNING - Failed login attempt for zach
+2025-10-25 10:08:52,717 - WARNING - Failed login attempt for zach
+2025-10-25 10:09:07,609 - INFO - admin logged in.
+2025-10-25 10:09:15,961 - INFO - User logged out.
+2025-10-25 10:11:10,987 - INFO - admin logged in.
+2025-10-25 10:14:36,081 - INFO - Length: 100.0 m → 0.100000 km by admin
+2025-10-25 10:14:40,296 - INFO - User logged out.
+2025-10-25 10:21:31,574 - INFO - admin logged in.
+2025-10-25 10:22:10,773 - INFO - User logged out.
+2025-10-25 10:22:20,588 - INFO - admin logged in.
+2025-10-25 10:23:00,992 - INFO - Force: 100.0 n → 0.100000 kn by admin
+2025-10-25 10:28:24,315 - INFO - Temperature: 25.0 C → 25.000000 K by admin
+2025-10-25 10:29:14,025 - INFO - Temperature: 25.0 C → 25.000000 K by admin
+2025-10-25 10:29:31,553 - INFO - Temperature: 25.0 C → 298.150000 K by admin
+2025-10-25 10:31:25,051 - INFO - Length: 25.0 m → 0.025000 km by admin
+2025-10-25 10:34:23,756 - WARNING - Conversion error by admin: Invalid unit entered.
+2025-10-25 10:34:40,357 - WARNING - Conversion error by admin: Invalid unit entered.
+2025-10-25 10:35:12,532 - INFO - Length: 250.0 m → 250.000000 m by admin
+2025-10-25 10:38:59,575 - INFO - Length: 250.0 m → 250.000000 m by admin
+2025-10-25 10:39:09,648 - INFO - Length: 250.0 m → 0.250000 km by admin
+2025-10-25 10:39:21,220 - INFO - Mass: 250.0 Kg → 250000.000000 g by admin
+2025-10-25 10:39:39,085 - INFO - Temperature: 25.0 C → 298.150000 K by admin
+2025-10-25 10:39:50,353 - INFO - User logged out.
+2025-10-25 10:41:13,361 - INFO - New user registered: test
+2025-10-25 10:41:28,766 - INFO - test logged in.
+2025-10-25 10:41:43,688 - INFO - Length: 30.0 m → 98.425197 ft by test
+2025-10-25 10:41:47,798 - INFO - User logged out.
+2025-10-25 10:41:55,332 - INFO - admin logged in.
+2025-10-25 10:42:00,592 - INFO - User logged out.
+2025-10-25 10:42:08,276 - WARNING - Failed login attempt for test2

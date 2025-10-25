@@ -38,3 +38,8 @@
 2025-10-25 10:41:55,332 - INFO - admin logged in.
 2025-10-25 10:42:00,592 - INFO - User logged out.
 2025-10-25 10:42:08,276 - WARNING - Failed login attempt for test2
+2025-10-25 10:52:34,557 - WARNING - Failed login attempt for admin
+2025-10-25 10:52:49,088 - INFO - New user registered: admin
+2025-10-25 10:52:59,285 - INFO - admin logged in.
+2025-10-25 10:53:16,831 - INFO - Volume: 100.0 M3 → 100000.000000 L by admin
+2025-10-25 10:53:22,167 - INFO - User logged out.

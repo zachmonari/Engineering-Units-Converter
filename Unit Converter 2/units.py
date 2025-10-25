@@ -15,26 +15,23 @@ logging.basicConfig(
 # ⚙️ Conversion Dictionaries
 # ------------------------------
 CONVERSIONS = {
-    "length": {"m": 1, "cm": 0.01, "mm": 0.001, "km": 1000, "in": 0.0254, "ft": 0.3048},
-    "mass": {"kg": 1, "g": 0.001, "lb": 0.453592, "tonne": 1000},
-    "force": {"n": 1, "kn": 1000, "lbf": 4.44822},
-    "pressure": {"pa": 1, "kpa": 1000, "bar": 1e5, "psi": 6894.76},
-    "volume": {"m3": 1, "l": 0.001, "cm3": 1e-6, "in3": 1.6387e-5},
-    "energy": {"j": 1, "kj": 1000, "mj": 1e6, "wh": 3600, "kwh": 3.6e6},
-    "power": {"w": 1, "kw": 1000, "mw": 1e6, "hp": 745.7},
-    "temperature": {"c": "Celsius", "f": "Fahrenheit", "k": "Kelvin"}
+    "Length": {"m": 1, "cm": 0.01, "mm": 0.001, "km": 1000, "in": 0.0254, "ft": 0.3048},
+    "Mass": {"Kg": 1, "g": 0.001, "lb": 0.453592, "tonne": 1000},
+    "Force": {"N": 1, "Kn": 1000, "lbf": 4.44822},
+    "Pressure": {"Pa": 1, "Kpa": 1000, "bar": 1e5, "Psi": 6894.76},
+    "Volume": {"M3": 1, "L": 0.001, "cm3": 1e-6, "in3": 1.6387e-5},
+    "Energy": {"J": 1, "Kj": 1000, "MJ": 1e6, "Wh": 3600, "Kwh": 3.6e6},
+    "Power": {"W": 1, "Kw": 1000, "Mw": 1e6, "Hp": 745.7},
+    "Temperature": {"C": "Celsius", "F": "Fahrenheit", "K": "Kelvin"}
 }
 
 # ------------------------------
 # 🔄 Conversion Functions
 # ------------------------------
 def convert_value(value, from_unit, to_unit, category):
-    from_unit = from_unit.lower()
-    to_unit = to_unit.lower()
-
-    if category == "temperature":
+    from_unit, to_unit = from_unit, to_unit
+    if category == "Temperature":
         return convert_temperature(value, from_unit, to_unit)
-
     units = CONVERSIONS[category]
     if from_unit not in units or to_unit not in units:
         raise ValueError("Invalid unit entered.")
@@ -43,16 +40,15 @@ def convert_value(value, from_unit, to_unit, category):
 def convert_temperature(value, from_unit, to_unit):
     if from_unit == to_unit:
         return value
-    if from_unit == "f":
+    if from_unit == "F":
         value = (value - 32) * 5 / 9
-    elif from_unit == "k":
+    elif from_unit == "K":
         value = value - 273.15
-    if to_unit == "f":
+    if to_unit == "F":
         return (value * 9 / 5) + 32
-    elif to_unit == "k":
+    elif to_unit == "K":
         return value + 273.15
-    else:
-        return value
+    return value
 
 # ------------------------------
 # 🌈 Streamlit UI Setup
@@ -87,7 +83,7 @@ body {
 """, unsafe_allow_html=True)
 
 # ------------------------------
-# 🔐 Session State
+# 🔐 Session State Initialization
 # ------------------------------
 if "users" not in st.session_state:
     st.session_state.users = {}
@@ -112,8 +108,7 @@ def sign_up():
             st.warning("Please fill all fields.")
         else:
             st.session_state.users[username] = password
-            st.success("✅ Account created successfully!")
-            st.balloons()
+            st.success("✅ Account created successfully! Please login now.")
             logging.info(f"New user registered: {username}")
 
 def login():
@@ -129,6 +124,7 @@ def login():
             st.success(f"✅ Welcome back, {username}!")
             st.balloons()
             logging.info(f"{username} logged in.")
+            st.rerun()  # force rerun to immediately enter the app
         else:
             st.error("❌ Invalid username or password.")
             logging.warning(f"Failed login attempt for {username}")
@@ -137,13 +133,21 @@ def login():
 # 🧮 Converter Page
 # ------------------------------
 def unit_converter():
+    st.image("ZachTechs.jpg", width=150)
     st.image("https://cdn-icons-png.flaticon.com/512/4781/4781517.png", width=100)
     st.title("⚙️ Engineering Unit Converter")
     st.write(f"👋 Hello, **{st.session_state.current_user}**! Ready to convert?")
 
+    # Logout Button (now works on first click)
+    if st.button("🚪 Log Out"):
+        st.session_state.logged_in = False
+        st.session_state.current_user = None
+        st.success("👋 Logged out successfully.")
+        logging.info("User logged out.")
+        st.rerun()  # force rerun to go back to login screen
+
     category = st.selectbox("Select Category:", list(CONVERSIONS.keys()))
     available_units = list(CONVERSIONS[category].keys())
-
     from_unit = st.selectbox("From Unit:", available_units)
     to_unit = st.selectbox("To Unit:", available_units)
     value = st.number_input("Enter Value:", value=0.0)
@@ -159,13 +163,6 @@ def unit_converter():
         except Exception as e:
             st.error(f"⚠️ Unexpected error: {e}")
             logging.error(f"Unexpected error: {e}")
-
-    if st.button("Log Out"):
-        st.session_state.logged_in = False
-        st.session_state.current_user = None
-        st.success("👋 Logged out successfully.")
-        logging.info("User logged out.")
-
 
 # ------------------------------
 # 🚀 App Flow

@@ -1,9 +1,29 @@
 import streamlit as st
 import logging
+import sqlite3
 
-# ------------------------------
-# 🔧 Configure Logging (UTF-8 Safe)
-# ------------------------------
+# ---------------- DATABASE SETUP ----------------
+conn = sqlite3.connect('users.db')
+c = conn.cursor()
+
+def create_usertable():
+    c.execute('CREATE TABLE IF NOT EXISTS users(username TEXT UNIQUE, password TEXT)')
+    conn.commit()
+
+def add_userdata(username, password):
+    try:
+        c.execute('INSERT INTO users(username, password) VALUES (?, ?)', (username, password))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False
+
+def login_user(username, password):
+    c.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password))
+    data = c.fetchone()
+    return data
+
+# ------------------------------ Logging ------------------------------
 logging.basicConfig(
     filename="unit_converter.log",
     level=logging.INFO,
@@ -11,9 +31,7 @@ logging.basicConfig(
     encoding="utf-8"
 )
 
-# ------------------------------
-# ⚙️ Conversion Dictionaries
-# ------------------------------
+# ------------------------------ Conversion Data ------------------------------
 CONVERSIONS = {
     "Length": {"m": 1, "cm": 0.01, "mm": 0.001, "km": 1000, "in": 0.0254, "ft": 0.3048},
     "Mass": {"Kg": 1, "g": 0.001, "lb": 0.453592, "tonne": 1000},
@@ -25,11 +43,8 @@ CONVERSIONS = {
     "Temperature": {"C": "Celsius", "F": "Fahrenheit", "K": "Kelvin"}
 }
 
-# ------------------------------
-# 🔄 Conversion Functions
-# ------------------------------
+# ------------------------------ Conversion Functions ------------------------------
 def convert_value(value, from_unit, to_unit, category):
-    from_unit, to_unit = from_unit, to_unit
     if category == "Temperature":
         return convert_temperature(value, from_unit, to_unit)
     units = CONVERSIONS[category]
@@ -50,9 +65,7 @@ def convert_temperature(value, from_unit, to_unit):
         return value + 273.15
     return value
 
-# ------------------------------
-# 🌈 Streamlit UI Setup
-# ------------------------------
+# ------------------------------ UI Setup ------------------------------
 st.set_page_config(page_title="⚙️ Engineering Unit Converter", page_icon="🌡️", layout="centered")
 
 st.markdown("""
@@ -82,19 +95,15 @@ body {
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------------------
-# 🔐 Session State Initialization
-# ------------------------------
-if "users" not in st.session_state:
-    st.session_state.users = {}
+create_usertable()
+
+# ------------------------------ Session State ------------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
 
-# ------------------------------
-# 🔑 Authentication Pages
-# ------------------------------
+# ------------------------------ Auth Pages ------------------------------
 def sign_up():
     st.image("https://cdn-icons-png.flaticon.com/512/747/747376.png", width=80)
     st.title("📝 Create Your Account")
@@ -102,14 +111,14 @@ def sign_up():
     password = st.text_input("Choose a password:", type="password")
 
     if st.button("Sign Up"):
-        if username in st.session_state.users:
-            st.error("⚠️ Username already exists!")
-        elif not username or not password:
+        if not username or not password:
             st.warning("Please fill all fields.")
         else:
-            st.session_state.users[username] = password
-            st.success("✅ Account created successfully! Please login now.")
-            logging.info(f"New user registered: {username}")
+            if add_userdata(username, password):
+                st.success("✅ Account created successfully! You can now log in.")
+                logging.info(f"New user registered: {username}")
+            else:
+                st.error("⚠️ Username already exists. Try another one.")
 
 def login():
     st.image("https://cdn-icons-png.flaticon.com/512/5087/5087579.png", width=80)
@@ -118,33 +127,31 @@ def login():
     password = st.text_input("Password:", type="password")
 
     if st.button("Log In"):
-        if username in st.session_state.users and st.session_state.users[username] == password:
+        user = login_user(username, password)
+        if user:
             st.session_state.logged_in = True
             st.session_state.current_user = username
             st.success(f"✅ Welcome back, {username}!")
             st.balloons()
             logging.info(f"{username} logged in.")
-            st.rerun()  # force rerun to immediately enter the app
+            st.rerun()
         else:
             st.error("❌ Invalid username or password.")
             logging.warning(f"Failed login attempt for {username}")
 
-# ------------------------------
-# 🧮 Converter Page
-# ------------------------------
+# ------------------------------ Converter ------------------------------
 def unit_converter():
     st.image("ZachTechs.jpg", width=150)
     st.image("https://cdn-icons-png.flaticon.com/512/4781/4781517.png", width=100)
     st.title("⚙️ Engineering Unit Converter")
     st.write(f"👋 Hello, **{st.session_state.current_user}**! Ready to convert?")
 
-    # Logout Button (now works on first click)
     if st.button("🚪 Log Out"):
         st.session_state.logged_in = False
         st.session_state.current_user = None
         st.success("👋 Logged out successfully.")
         logging.info("User logged out.")
-        st.rerun()  # force rerun to go back to login screen
+        st.rerun()
 
     category = st.selectbox("Select Category:", list(CONVERSIONS.keys()))
     available_units = list(CONVERSIONS[category].keys())
@@ -156,7 +163,7 @@ def unit_converter():
         try:
             result = convert_value(value, from_unit, to_unit, category)
             st.success(f"✅ {value} {from_unit} = {result:.6f} {to_unit}")
-            logging.info(f"{category.capitalize()}: {value} {from_unit} → {result:.6f} {to_unit} by {st.session_state.current_user}")
+            logging.info(f"{category}: {value} {from_unit} → {result:.6f} {to_unit} by {st.session_state.current_user}")
         except ValueError as e:
             st.error(f"⚠️ Error: {e}")
             logging.warning(f"Conversion error by {st.session_state.current_user}: {e}")
@@ -164,9 +171,7 @@ def unit_converter():
             st.error(f"⚠️ Unexpected error: {e}")
             logging.error(f"Unexpected error: {e}")
 
-# ------------------------------
-# 🚀 App Flow
-# ------------------------------
+# ------------------------------ App Flow ------------------------------
 if not st.session_state.logged_in:
     choice = st.sidebar.radio("Navigation", ["Login", "Sign Up"])
     if choice == "Login":
@@ -176,9 +181,7 @@ if not st.session_state.logged_in:
 else:
     unit_converter()
 
-# ------------------------------
-# 🏁 Footer
-# ------------------------------
+# ------------------------------ Footer ------------------------------
 st.markdown(
     """
     <div class='footer'>

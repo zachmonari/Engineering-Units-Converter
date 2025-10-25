@@ -43,3 +43,15 @@
 2025-10-25 10:52:59,285 - INFO - admin logged in.
 2025-10-25 10:53:16,831 - INFO - Volume: 100.0 M3 → 100000.000000 L by admin
 2025-10-25 10:53:22,167 - INFO - User logged out.
+2025-10-25 11:25:31,704 - WARNING - Failed login attempt for admin
+2025-10-25 11:25:47,530 - INFO - New user registered: admin
+2025-10-25 11:26:02,067 - INFO - admin logged in.
+2025-10-25 11:26:17,760 - INFO - Length: 200.0 m → 0.200000 km by admin
+2025-10-25 11:26:22,131 - INFO - User logged out.
+2025-10-25 11:26:37,985 - WARNING - Failed login attempt for test
+2025-10-25 11:26:50,294 - INFO - New user registered: test
+2025-10-25 11:27:05,837 - INFO - test logged in.
+2025-10-25 11:27:22,601 - INFO - Energy: 500.0 J → 0.500000 Kj by test
+2025-10-25 11:27:26,431 - INFO - User logged out.
+2025-10-25 11:33:09,456 - INFO - admin logged in.
+2025-10-25 11:33:32,681 - INFO - Pressure: 500.0 Pa → 0.500000 Kpa by admin

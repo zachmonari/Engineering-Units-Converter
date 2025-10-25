@@ -55,3 +55,6 @@
 2025-10-25 11:27:26,431 - INFO - User logged out.
 2025-10-25 11:33:09,456 - INFO - admin logged in.
 2025-10-25 11:33:32,681 - INFO - Pressure: 500.0 Pa → 0.500000 Kpa by admin
+2025-10-25 11:44:30,976 - INFO - admin logged in.
+2025-10-25 11:45:14,725 - INFO - Power: 900.0 W → 1.206920 Hp by admin
+2025-10-25 11:45:26,802 - INFO - User logged out.
